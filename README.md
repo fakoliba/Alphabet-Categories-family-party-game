@@ -4,13 +4,21 @@ An offline-first family party game. Pick a letter, name something in a category,
 
 ## Run it
 
-This project has no runtime dependencies, account system, API calls, analytics, or external assets. It can be opened directly from `index.html`. For browsers that restrict local-file storage, start a server on your own computer:
+The app is written in Python and uses Streamlit for its local interface. It does not use OpenAI, online job feeds, accounts, analytics, remote fonts, or remote assets. Install the one UI dependency before an offline session:
 
 ```sh
-python3 -m http.server 8000
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements.txt
 ```
 
-Then open `http://localhost:8000`. The app and its assets are served from the local machine; internet access is not used. Game settings and past results are stored in browser `localStorage` on that device.
+Start the app on the same computer:
+
+```sh
+streamlit run app.py --server.address 127.0.0.1
+```
+
+Streamlit opens the game in a browser through the computer's local loopback connection. Gameplay and saving do not require internet access. Game settings, player names, and past results are stored in `~/.alphabet-categories/save.json` on that device. Install dependencies before going offline.
 
 ## Play
 
@@ -21,31 +29,30 @@ Then open `http://localhost:8000`. The app and its assets are served from the lo
 - Pass one device around. Each player gets a unique letter on their turn.
 - Vote answers up or down; only accepted answers earn a point.
 - The game ends when eligible letters run out or the selected number of complete player rounds is reached. Ties share the win.
-- Sound effects are generated locally and can be muted.
+- Locally generated sound effects can be muted.
 
 ## Project layout
 
 ```text
-index.html       App shell and local script/style references
-styles.css       Responsive, kid-friendly interface
-src/game.js      Pure game rules; no browser or network dependencies
-src/storage.js   Device-local save/load for settings and game history
-src/app.js       Setup, pass-and-play UI, timer, scoreboard, and history
-tests/game.test.js  Offline rule tests using Node's built-in test runner
+app.py                         Python/Streamlit UI and local game flow
+alphabet_categories/game.py    Pure game rules, independent of the UI
+alphabet_categories/storage.py Device-local JSON save/load
+tests/test_game.py             Offline rule tests using unittest
+requirements.txt               Streamlit UI dependency
 ```
 
 ## Verify game rules offline
 
-Node.js is needed only to run the test suite. There are no packages to install:
+Tests use Python's standard library and fabricated player names and answers:
 
 ```sh
-npm test
+python -m unittest discover -s tests -v
 ```
 
-The tests cover one-time letter draws, excluded letters, accepted-answer scoring, both game-ending conditions, and tied winners. Test player names and answers are fabricated.
+The tests cover one-time letter draws, excluded letters, accepted-answer scoring, both game-ending conditions, and winner selection including ties.
 
 ## Privacy and network behavior
 
-The game does not send player names, categories, answers, or scores anywhere. There are no OpenAI integrations, online job feeds, remote fonts, or third-party scripts. Data stays in the browser profile on the device. Clearing that browser's site data removes saved games.
+The app runs on the local computer and stores data in that user's home folder. It does not transmit player names, categories, answers, or scores to a service. No real personal data is needed for development or testing; test fixtures use made-up names and answers.
 
 The project is licensed under the [MIT License](LICENSE).

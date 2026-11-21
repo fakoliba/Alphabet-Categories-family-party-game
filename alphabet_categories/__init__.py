@@ -1,0 +1,1 @@
+"""Offline alphabet category game."""
