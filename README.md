@@ -4,21 +4,19 @@ An offline-first family party game. Pick a letter, name something in a category,
 
 ## Run it
 
-The app is written in Python and uses Streamlit for its local interface. It does not use OpenAI, online job feeds, accounts, analytics, remote fonts, or remote assets. Install the one UI dependency before an offline session:
+The app uses only Python's standard library. It does not require Streamlit, a package install, an account, analytics, remote fonts, or internet access. A browser displays the interface, while Python runs the game locally.
 
 ```sh
-python3 -m venv .venv
-source .venv/bin/activate
-python -m pip install -r requirements.txt
+python3 --version
 ```
 
 Start the app on the same computer:
 
 ```sh
-streamlit run app.py --server.address 127.0.0.1
+python3 app.py
 ```
 
-Streamlit opens the game in a browser through the computer's local loopback connection. The app binds only to `127.0.0.1`, and Streamlit usage statistics are disabled in `.streamlit/config.toml`. Gameplay and saving do not require internet access. Game settings, player names, and past results are stored in `~/.alphabet-categories/save.json` on that device. Install dependencies before going offline.
+The app opens at `http://127.0.0.1:8765` in your browser. It binds only to the local computer. Game settings, player names, and past results are stored in `~/.alphabet-categories/save.json` on that device. No package installation is needed, so it can be started on a computer that has no internet connection.
 
 ## Play
 
@@ -34,11 +32,10 @@ Streamlit opens the game in a browser through the computer's local loopback conn
 ## Project layout
 
 ```text
-app.py                         Python/Streamlit UI and local game flow
+app.py                         Python standard-library local web app and game flow
 alphabet_categories/game.py    Pure game rules, independent of the UI
 alphabet_categories/storage.py Device-local JSON save/load
 tests/test_game.py             Offline rule tests using unittest
-requirements.txt               Streamlit UI dependency
 ```
 
 ## Verify game rules offline
@@ -53,6 +50,6 @@ The tests cover one-time letter draws, excluded letters, accepted-answer scoring
 
 ## Privacy and network behavior
 
-The app runs on the local computer and stores data in that user's home folder. It does not transmit player names, categories, answers, or scores to a service. No real personal data is needed for development or testing; test fixtures use made-up names and answers.
+The app runs on the local computer and stores data in that user's home folder. It does not transmit player names, categories, answers, or scores to a service. The server listens only on `127.0.0.1`, and request logging is disabled so names and answers are not printed to the terminal. No real personal data is needed for development or testing; test fixtures use made-up names and answers.
 
 The project is licensed under the [MIT License](LICENSE).
