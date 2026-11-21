@@ -18,7 +18,7 @@ Start the app on the same computer:
 streamlit run app.py --server.address 127.0.0.1
 ```
 
-Streamlit opens the game in a browser through the computer's local loopback connection. Gameplay and saving do not require internet access. Game settings, player names, and past results are stored in `~/.alphabet-categories/save.json` on that device. Install dependencies before going offline.
+Streamlit opens the game in a browser through the computer's local loopback connection. The app binds only to `127.0.0.1`, and Streamlit usage statistics are disabled in `.streamlit/config.toml`. Gameplay and saving do not require internet access. Game settings, player names, and past results are stored in `~/.alphabet-categories/save.json` on that device. Install dependencies before going offline.
 
 ## Play
 
